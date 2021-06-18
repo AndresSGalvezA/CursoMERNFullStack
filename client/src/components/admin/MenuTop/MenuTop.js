@@ -1,0 +1,24 @@
+import React from "react";
+import AGLogo from '../../../assets/img/png/logo.png';
+import { Button } from 'antd';
+import { MenuUnfoldOutlined, MenuFoldOutlined, PoweroffOutlined } from '@ant-design/icons';
+import './MenuTop.scss';
+
+export default function MenuTop(props) {
+    const { menuCollapse, setMenuCollapse } = props;
+    return (
+        <div className="menu-top">
+            <div className="menu-top__left">
+                <img className="menu-top__left-logo" src={AGLogo} alt="Andres Gálvez" />
+                <Button type="link" onClick={() => setMenuCollapse(!menuCollapse)} >
+                    {menuCollapse ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+                </Button>
+            </div>
+            <div className="menu-top__right">
+                <Button type="link" onClick={() => console.log("Apagado!")}>
+                    <PoweroffOutlined />
+                </Button>
+            </div>
+        </div>
+    );
+}
