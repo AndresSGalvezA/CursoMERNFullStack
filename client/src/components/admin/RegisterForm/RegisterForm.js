@@ -51,8 +51,6 @@ export default function RegisterForm() {
     };
 
     const register = async e => {
-        const {email, password, repeatPassword, privacyPolicy} = formValid;
-
         if(!inputs.email || !inputs.password || !inputs.repeatPassword || !inputs.privacyPolicy) {
             notification['error']({ message: "Todos los campos deben llenarse."});
         } else {

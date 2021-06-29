@@ -1,8 +1,8 @@
 const bcrypt = require("bcrypt-nodejs");
 const User = require("../models/user");
-//const jwt = require("../services/jwt");
+const jwt = require("../services/jwt");
 
-async function signUp(req, res) {
+function signUp(req, res) {
     const user = new User();
     const { name, lastname, email, password, repeatPassword } = req.body;
     //user.name = name;
@@ -24,7 +24,7 @@ async function signUp(req, res) {
                     user.password = hash;
                     user.save((err, userStored) => {
                         if(err) {
-                            res.status(500).send({message: err});
+                            res.status(500).send({message: "Usuario no válido."});
                         } else {
                             if(!userStored) {
                                 res.status(404).send({message: "Error al crear el usuario."});
@@ -39,6 +39,40 @@ async function signUp(req, res) {
     }
 }
 
+function signIn(req, res) {
+    const params = req.body;
+    const email = params.email.toLowerCase();
+    const password = params.password;
+
+    User.findOne({email}, (err, userStored) => {
+        if(err) {
+            res.status(500).send({message: "Error en el servidor."});
+        } else {
+            if(!userStored) {
+                res.status(404).send({message: "Credenciales incorrectas."});
+            } else {
+                bcrypt.compare(password, userStored.password, (err, check) => {
+                    if(err) {
+                        res.status(500).send({message: "Error en el servidor."});
+                    } else if(!check) {
+                        res.status(404).send({message: "Credenciales incorrectas."});
+                    } else {
+                        if(!userStored.active) {
+                            res.status(200).send({code: 200, message: "Usuario inhabilitado."});
+                        } else {
+                            res.status(200).send({
+                                accesToken: jwt.createAccessToken(userStored),
+                                refreshToken: jwt.createRefreshToken(userStored)
+                            });
+                        }
+                    }
+                });
+            }
+        }
+    })
+}
+
 module.exports = {
-    signUp
+    signUp,
+    signIn
 };
