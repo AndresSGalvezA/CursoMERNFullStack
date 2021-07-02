@@ -19,29 +19,23 @@ export default function LoginForm() {
     };
 
     const login = async e => {
-        e.preventDefault();
         const result = await signInApi(inputs);
         console.log(result);
         if(result.message) {
-            notification["error"]({
-                message: result.message
-            });
+            notification["error"]({ message: result.message });
         } else {
             const {accessToken, refreshToken} = result;
             localStorage.setItem(ACCESS_TOKEN, accessToken);
             localStorage.setItem(REFRESH_TOKEN, refreshToken);
-            notification["success"]({
-                message: "Acceso correcto"
-            });
-
-            window.location.href = "/admin";
+            notification["success"]({ message: "Acceso correcto" });
+            //window.location.href = "/admin";
         }
 
         //console.log(result);
     };
 
     return (
-        <Form className="login-form" onChange={changeForm} onFinish={login}>
+        <Form className="login-form" onChange={changeForm} onSubmit={e => e.preventDefault()} onFinish={login}>
             <Form.Item>
                 <Input
                     prefix={<UserOutlined style={{ color: "rgba(0,0,0,.25)"}} />}
