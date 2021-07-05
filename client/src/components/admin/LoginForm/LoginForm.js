@@ -28,7 +28,7 @@ export default function LoginForm() {
             localStorage.setItem(ACCESS_TOKEN, accessToken);
             localStorage.setItem(REFRESH_TOKEN, refreshToken);
             notification["success"]({ message: "Acceso correcto" });
-            //window.location.href = "/admin";
+            window.location.href = "/admin";
         }
 
         //console.log(result);
